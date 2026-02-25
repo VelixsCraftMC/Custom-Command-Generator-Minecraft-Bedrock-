@@ -17,9 +17,9 @@
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; position: relative; }
         
         /* Minecraft Preview Style */
-        .preview-box { background: rgba(0, 0, 0, 0.7); border-radius: 4px; padding: 12px; margin-bottom: 15px; border-left: 4px solid var(--success); font-family: 'Consolas', monospace; }
+        .preview-box { background: rgba(0, 0, 0, 0.8); border-radius: 4px; padding: 12px; margin-bottom: 15px; border-left: 4px solid var(--success); font-family: 'Consolas', monospace; }
         .mc-cmd { color: #f1f1f1; font-size: 0.95rem; margin-bottom: 5px; }
-        .mc-desc { color: var(--mc-gray); font-size: 0.85rem; font-style: italic; }
+        .mc-desc { color: var(--mc-gray); font-size: 0.85rem; }
         .mc-usage { color: #55FF55; font-size: 0.9rem; margin-top: 5px; }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
@@ -47,7 +47,7 @@
 <div class="container">
     <div style="text-align:center">
         <h1>BP Custom Command Generator</h1>
-        <p style="color: #8b949e">By @VelixsCraftMCYT | Manifest & Script API 2.4.0</p>
+        <p style="color: #8b949e">By @VelixsCraftMCYT | Anti-Keyboard Close Fix</p>
     </div>
 
     <!-- Global Settings -->
@@ -55,11 +55,11 @@
         <div class="form-grid">
             <div>
                 <label>Pack Name</label>
-                <input type="text" id="pack_name" value="Generated Custom Command BP" oninput="updateAll()">
+                <input type="text" id="pack_name" value="Generated Custom Command BP" oninput="liveUpdateAll()">
             </div>
             <div>
                 <label>Global Namespace (prefix:)</label>
-                <input type="text" id="global_ns" value="namespace" oninput="updateAll()">
+                <input type="text" id="global_ns" value="namespace" oninput="liveUpdateAll()">
             </div>
         </div>
     </div>
@@ -98,7 +98,7 @@
             cheats: false,
             params: []
         });
-        render();
+        renderUI();
     }
 
     function addParam(cmdId) {
@@ -107,102 +107,118 @@
             type: "Enum",
             name: "choice",
             enumId: "ACTION_MAP",
-            enumOptions: [
-                { key: "option_1", mcCommands: ["say Hello World"] }
-            ]
+            enumOptions: [{ key: "option_1", mcCommands: ["say Hello World"] }]
         });
-        render();
+        renderUI();
     }
 
-    function render() {
-        const ns = document.getElementById('global_ns').value;
+    // Fungsi utama untuk membangun UI (hanya dipanggil saat struktur berubah)
+    function renderUI() {
         const container = document.getElementById('commands_ui');
         container.innerHTML = '';
 
         commands.forEach((cmd, cIdx) => {
-            // Build Syntax Preview
-            let syntax = `/${ns}:${cmd.name}`;
-            cmd.params.forEach(p => {
-                syntax += p.type === 'Enum' ? ` <${p.enumId.toLowerCase()}>` : ` <${p.name}>`;
-            });
-
             const div = document.createElement('div');
             div.className = 'card';
+            div.id = `cmd-card-${cIdx}`;
             div.innerHTML = `
                 <!-- MINECRAFT PREVIEW SECTION -->
-                <div class="preview-box">
-                    <div class="mc-cmd">/${ns}:${cmd.name} <span style="color:var(--mc-gray)">- ${cmd.desc}</span></div>
-                    <div class="mc-usage">Usage: ${syntax}</div>
+                <div class="preview-box" id="preview-box-${cIdx}">
+                    <!-- Teks di sini akan diupdate via liveUpdateAll -->
                 </div>
 
                 <div class="form-grid">
-                    <div><label>Name</label><input type="text" value="${cmd.name}" oninput="commands[${cIdx}].name=this.value;render();updateAll()"></div>
+                    <div><label>Name</label><input type="text" value="${cmd.name}" oninput="commands[${cIdx}].name=this.value; liveUpdateAll()"></div>
                     <div>
                         <label>Permission Level</label>
-                        <select onchange="commands[${cIdx}].perm=this.value;updateAll()">
+                        <select onchange="commands[${cIdx}].perm=this.value; liveUpdateAll()">
                             <option>Any</option><option>Admin</option><option>Host</option><option>GameDirectors</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-grid">
-                    <div><label>Description</label><input type="text" value="${cmd.desc}" oninput="commands[${cIdx}].desc=this.value;render();updateAll()"></div>
+                    <div><label>Description</label><input type="text" value="${cmd.desc}" oninput="commands[${cIdx}].desc=this.value; liveUpdateAll()"></div>
                     <div>
                         <label>Cheats Required</label>
-                        <select onchange="commands[${cIdx}].cheats=(this.value==='true');updateAll()">
+                        <select onchange="commands[${cIdx}].cheats=(this.value==='true'); liveUpdateAll()">
                             <option value="false">False</option><option value="true">True</option>
                         </select>
                     </div>
                 </div>
 
-                <div id="params_${cmd.id}">
+                <div id="params_area_${cIdx}">
                     ${cmd.params.map((p, pIdx) => `
                         <div class="param-box">
                             <div class="form-grid">
                                 <div>
                                     <label>Type</label>
-                                    <select onchange="commands[${cIdx}].params[${pIdx}].type=this.value;render()">
+                                    <select onchange="commands[${cIdx}].params[${pIdx}].type=this.value; renderUI()">
                                         ${paramTypes.map(t => `<option ${p.type===t?'selected':''}>${t}</option>`).join('')}
                                     </select>
                                 </div>
                                 <div>
                                     <label>Argument Name</label>
-                                    <input type="text" value="${p.name}" oninput="commands[${cIdx}].params[${pIdx}].name=this.value;render();updateAll()">
+                                    <input type="text" value="${p.name}" oninput="commands[${cIdx}].params[${pIdx}].name=this.value; liveUpdateAll()">
                                 </div>
                             </div>
 
                             ${p.type === 'Enum' ? `
                                 <div class="enum-container">
                                     <label>Internal Enum ID</label>
-                                    <input type="text" value="${p.enumId}" oninput="commands[${cIdx}].params[${pIdx}].enumId=this.value;render();updateAll()">
+                                    <input type="text" value="${p.enumId}" oninput="commands[${cIdx}].params[${pIdx}].enumId=this.value; liveUpdateAll()">
                                     
                                     <div style="margin-top:10px">
                                         <label>Enum Key Action Mappings:</label>
                                         ${p.enumOptions.map((opt, oIdx) => `
                                             <div style="border-bottom:1px solid #333; padding:10px 0;">
-                                                <input type="text" placeholder="Key (e.g. kit1)" value="${opt.key}" oninput="commands[${cIdx}].params[${pIdx}].enumOptions[${oIdx}].key=this.value;updateAll()">
+                                                <input type="text" placeholder="Key" value="${opt.key}" oninput="commands[${cIdx}].params[${pIdx}].enumOptions[${oIdx}].key=this.value; liveUpdateAll()">
                                                 ${opt.mcCommands.map((mcc, mIdx) => `
                                                     <div class="flex-row">
-                                                        <input type="text" style="font-family:monospace; color:#a5f3fc" value="${mcc}" oninput="commands[${cIdx}].params[${pIdx}].enumOptions[${oIdx}].mcCommands[${mIdx}]=this.value;updateAll()">
-                                                        <button class="btn btn-danger" style="padding:5px 10px" onclick="commands[${cIdx}].params[${pIdx}].enumOptions[${oIdx}].mcCommands.splice(${mIdx},1);render()">X</button>
+                                                        <input type="text" style="font-family:monospace; color:#a5f3fc" value="${mcc}" oninput="commands[${cIdx}].params[${pIdx}].enumOptions[${oIdx}].mcCommands[${mIdx}]=this.value; liveUpdateAll()">
+                                                        <button class="btn btn-danger" style="padding:5px 10px" onclick="commands[${cIdx}].params[${pIdx}].enumOptions[${oIdx}].mcCommands.splice(${mIdx},1); renderUI()">X</button>
                                                     </div>
                                                 `).join('')}
-                                                <button class="btn btn-warning" onclick="commands[${cIdx}].params[${pIdx}].enumOptions[${oIdx}].mcCommands.push('say command');render()">+ Add Command</button>
+                                                <button class="btn btn-warning" onclick="commands[${cIdx}].params[${pIdx}].enumOptions[${oIdx}].mcCommands.push('say command'); renderUI()">+ Add Command</button>
                                             </div>
                                         `).join('')}
-                                        <button class="btn btn-add" style="margin-top:10px; font-size:0.7rem" onclick="commands[${cIdx}].params[${pIdx}].enumOptions.push({key:'new',mcCommands:[]});render()">+ Add Key Option</button>
+                                        <button class="btn btn-add" style="margin-top:10px; font-size:0.7rem" onclick="commands[${cIdx}].params[${pIdx}].enumOptions.push({key:'new',mcCommands:[]}); renderUI()">+ Add Key Option</button>
                                     </div>
                                 </div>
                             ` : ''}
-                            <button class="btn btn-danger" style="width:100%; margin-top:10px" onclick="commands[${cIdx}].params.splice(${pIdx},1);render()">Delete Parameter</button>
+                            <button class="btn btn-danger" style="width:100%; margin-top:10px" onclick="commands[${cIdx}].params.splice(${pIdx},1); renderUI()">Delete Parameter</button>
                         </div>
                     `).join('')}
                 </div>
                 <button class="btn btn-add" style="background:#21262d; font-size:0.8rem;" onclick="addParam(${cmd.id})">+ Add Parameter</button>
-                <button class="btn btn-danger" style="float:right;" onclick="commands.splice(${cIdx},1);render()">Delete Command</button>
+                <button class="btn btn-danger" style="float:right;" onclick="commands.splice(${cIdx},1); renderUI()">Delete Command</button>
             `;
             container.appendChild(div);
         });
-        updateAll();
+        liveUpdateAll();
+    }
+
+    // Fungsi untuk update teks PREVIEW & KODE tanpa merusak input (Anti-keyboard close)
+    function liveUpdateAll() {
+        const ns = document.getElementById('global_ns').value;
+
+        // 1. Update Preview Minecraft UI untuk setiap command
+        commands.forEach((cmd, cIdx) => {
+            const previewBox = document.getElementById(`preview-box-${cIdx}`);
+            if (previewBox) {
+                let syntax = `/${ns}:${cmd.name}`;
+                cmd.params.forEach(p => {
+                    syntax += p.type === 'Enum' ? ` <${p.enumId.toLowerCase()}>` : ` <${p.name}>`;
+                });
+
+                previewBox.innerHTML = `
+                    <div class="mc-cmd">/${ns}:${cmd.name} <span style="color:var(--mc-gray)">- ${cmd.desc}</span></div>
+                    <div class="mc-usage">Usage: ${syntax}</div>
+                `;
+            }
+        });
+
+        // 2. Update Code Preview di bagian bawah
+        document.getElementById('code_preview').textContent = activeTab === 'js' ? generateScript() : generateManifest();
     }
 
     function generateScript() {
@@ -279,15 +295,11 @@
         }, null, "\t");
     }
 
-    function updateAll() {
-        document.getElementById('code_preview').textContent = activeTab === 'js' ? generateScript() : generateManifest();
-    }
-
     function switchTab(t) {
         activeTab = t;
         document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
         document.getElementById('tab-' + t).classList.add('active');
-        updateAll();
+        liveUpdateAll();
     }
 
     async function generateZip() {
@@ -301,6 +313,7 @@
         link.click();
     }
 
+    // Mulai dengan 1 command
     addNewCommand();
 </script>
 
