@@ -3,7 +3,7 @@ const UTILS_CONFIG = [{
     type: "Alat",
     title: "Custom Command Generator (Bedrock Edition)",
     desc: "Mendukung Semua versi terbaru 1.21.130+",
-    thumb: "command.webp",
+    thumb: "image/command.webp",
     internalPost: "Custom Command Generator",
     externalLink: "html/command/index.html"
 }];
