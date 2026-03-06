@@ -1,0 +1,1099 @@
+:root {
+    /* iOS Light/Dark Adaptive Variables */
+    --bg: #F2F2F7;
+    --card: #FFFFFF;
+    --text: #000000;
+    --text-sec: #8A8A8E;
+    --accent: #007AFF;
+    /* iOS Blue */
+    --danger: #FF3B30;
+    /* iOS Red */
+    --success: #34C759;
+    /* iOS Green */
+    --warning: #FF9500;
+    /* iOS Orange */
+    --border: #C6C6C8;
+    --nav-bg: rgba(249, 249, 249, 0.85);
+    --input-bg: #E5E5EA;
+    --code-bg: #282C34;
+    --code-text: #61AFEF;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #000000;
+        --card: #1C1C1E;
+        --text: #FFFFFF;
+        --text-sec: #EBEBF599;
+        --accent: #0A84FF;
+        --danger: #FF453A;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --border: #38383A;
+        --nav-bg: rgba(29, 29, 29, 0.85);
+        --input-bg: #2C2C2E;
+        --code-bg: #151718;
+    }
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding-top: 50px;
+    padding-bottom: 110px;
+    /* Space for bottom nav */
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+/* Typography iOS */
+.ios-large-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-top: 10px;
+}
+
+.ios-subtitle {
+    font-size: 15px;
+    color: var(--text-sec);
+    margin-top: 5px;
+    margin-bottom: 24px;
+}
+
+/* --- Standalone Content Label --- */
+.ios-block-label {
+    display: inline-block;
+    background: var(--accent);
+    /* Warna biru iOS */
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Variasi warna jika diperlukan (opsional) */
+.ios-block-label.warning {
+    background: var(--warning);
+}
+
+.ios-block-label.danger {
+    background: var(--danger);
+}
+
+.ios-block-label.success {
+    background: var(--success);
+}
+
+/* iOS Top Navigation Bar */
+.ios-top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 1000;
+}
+
+.ios-back-btn {
+    display: flex;
+    align-items: center;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 400;
+    gap: 4px;
+}
+
+.ios-back-btn:active {
+    opacity: 0.5;
+}
+
+.ios-nav-title {
+    font-size: 17px;
+    font-weight: 600;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* --- iOS Mini Ads Player Box --- */
+.ios-ads-player {
+    position: fixed;
+    bottom: 100px;
+    /* Di atas bottom nav */
+    right: 16px;
+    width: 140px;
+    height: 85px;
+    background: var(--card);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    border: 0.5px solid var(--border);
+    z-index: 2500;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(200%);
+    /* Sembunyi ke kanan */
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    bottom: 90px; /* Sesuaikan jaraknya dari bawah agar tidak terlalu tinggi */
+    width: 130px; /* Perkecil sedikit jika mengganggu */
+    height: 80px;
+}
+
+.ios-ads-player.show-ads {
+    transform: translateX(0);
+    /* Muncul */
+}
+
+.ads-image-container {
+    flex: 1;
+    position: relative;
+    background: #000;
+}
+
+.ads-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ads-label {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 8px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    font-weight: 800;
+}
+
+.ads-progress-container {
+    height: 3px;
+    background: var(--input-bg);
+    width: 100%;
+}
+
+.ads-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+}
+
+/* --- Perbaikan iOS Bottom Navigation Bar --- */
+.ios-bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 75px;
+    /* Sedikit diperpendek agar lebih padat */
+    background: var(--nav-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+    /* Otomatis menyesuaikan Home Bar iPhone */
+    z-index: 1000;
+}
+
+.ios-tab {
+    flex: 1;
+    /* Memberikan ruang klik yang luas (pas di jempol) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-sec);
+    text-decoration: none;
+    font-size: 11px;
+    /* Ukuran teks diperbesar sedikit */
+    font-weight: 500;
+    gap: 4px;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+}
+
+/* Ukuran Ikon Utama */
+.ios-tab ion-icon,
+.ios-tab svg {
+    width: 26px;
+    /* Ukuran ikon ideal iOS */
+    height: 26px;
+    transition: 0.2s;
+}
+
+/* Efek saat tab aktif (Warna & Skala) */
+.ios-tab.active {
+    color: var(--accent);
+}
+
+.ios-tab.active ion-icon,
+.ios-tab.active svg {
+    transform: scale(1.1);
+    /* Ikon sedikit membesar saat aktif */
+}
+
+/* Menghilangkan bayangan abu-abu saat ditekan lama di Android/iOS */
+.ios-tab {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Efek feedback saat ditekan (Tap Feedback) */
+.ios-tab:active {
+    transform: scale(0.92);
+    opacity: 0.7;
+}
+
+/* iOS Cards (Form Group) */
+.card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.code-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Forms & Inputs */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--text-sec);
+    margin-bottom: 6px;
+    margin-left: 6px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--input-bg);
+    border: none;
+    color: var(--text);
+    border-radius: 10px;
+    font-size: 16px;
+    /* 16px avoids auto-zoom on iOS */
+    outline: none;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+input:focus,
+select:focus {
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Buttons */
+.btn {
+    padding: 14px 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: transform 0.1s, opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn:active {
+    transform: scale(0.97);
+    opacity: 0.8;
+}
+
+.btn-add {
+    background: var(--accent);
+    color: white;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.btn-add svg {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-danger {
+    background: rgba(255, 59, 48, 0.1);
+    color: var(--danger);
+}
+
+.btn-danger-small {
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+    margin-left: 8px;
+}
+
+.btn-warning {
+    background: rgba(255, 149, 0, 0.1);
+    color: var(--warning);
+    font-size: 13px;
+    margin-top: 8px;
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.btn-download {
+    background: var(--accent);
+    color: white;
+    width: 100%;
+    font-size: 17px;
+    padding: 16px;
+    border-radius: 0 0 14px 14px;
+}
+
+.btn-download svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* Info Box (Like iOS Tips) */
+.info-box {
+    background: rgba(0, 122, 255, 0.1);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.info-title {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.info-title svg {
+    width: 18px;
+    height: 18px;
+}
+
+.info-content {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.info-content ul {
+    margin: 5px 0 0 18px;
+    padding: 0;
+    color: var(--text-sec);
+}
+
+.info-content li {
+    margin-bottom: 4px;
+}
+
+/* --- Perbaikan iOS Segmented Control (Tabs) --- */
+.tabs {
+    display: flex;
+    background: rgba(118, 118, 128, 0.12); /* Background abu-abu transparan khas iOS */
+    border-radius: 10px;
+    padding: 2px; /* Jarak antara tepian dan tombol */
+    margin-bottom: 20px;
+    overflow-x: auto; /* Mendukung banyak tab */
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border: none; /* Menghilangkan border kaku */
+}
+
+/* Sembunyikan Scrollbar */
+.tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 7px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    border: none; /* Hilangkan border */
+    background: transparent; /* Transparan saat tidak aktif */
+    border-radius: 8px; /* Sudut sedikit membulat di dalam */
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 80px;
+}
+
+/* Gaya Tab Aktif (Seperti di Gambar 1) */
+.tab.active {
+    background: var(--card); /* Putih di light mode, Hitam di dark mode */
+    color: var(--text);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04);
+    font-weight: 600;
+}
+
+/* Search Bar (Pastikan bulat sempurna) */
+.search-input-wrapper {
+    background: var(--input-bg);
+    border-radius: 12px; /* Lebih rounded */
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    border: none;
+}
+
+/* Pause saat ditekan (opsional) */
+.ios-marquee-wrapper:active .marquee-content {
+    animation-play-state: paused;
+}
+
+/* --- iOS Search Bar Style --- */
+.ios-search-container {
+    margin-bottom: 20px;
+}
+
+.search-input-wrapper:focus-within {
+    background: var(--border);
+    /* Sedikit lebih gelap saat diklik */
+}
+
+/* Code Preview */
+pre {
+    margin: 0;
+    padding: 45px 16px 20px 16px !important;
+    background: var(--code-bg);
+    color: var(--code-text);
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 13px;
+    height: 350px;
+    overflow: auto;
+    white-space: pre;
+    border-radius: 14px 14px 0 0;
+}
+
+.btn-copy {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: 0.2s;
+}
+
+.btn-copy.success {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+}
+
+/* Dynamic Content styling inside commands_ui generated by script.js */
+.param-box {
+    border-left: 3px solid var(--accent);
+    padding-left: 14px;
+    margin: 16px 0;
+    background: var(--input-bg);
+    padding-bottom: 12px;
+    padding-top: 12px;
+    padding-right: 12px;
+    border-radius: 0 10px 10px 0;
+}
+
+.enum-container {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 14px;
+    border-radius: 10px;
+    margin-top: 12px;
+}
+
+.flex-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.flex-row input {
+    flex: 1;
+}
+
+.preview-box {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--success);
+    font-family: 'SF Mono', 'Consolas', monospace;
+    word-wrap: break-word;
+}
+
+@media (prefers-color-scheme: dark) {
+    .preview-box {
+        background: rgba(255, 255, 255, 0.05);
+    }
+}
+
+.mc-cmd {
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.mc-usage {
+    color: var(--success);
+    font-size: 13px;
+}
+
+/* --- iOS Marquee Style --- */
+.ios-marquee-wrapper {
+    background: var(--input-bg);
+    border-radius: 20px;
+    padding: 8px 0;
+    margin-bottom: 12px;
+    overflow: hidden;
+    /* Memotong teks yang keluar jalur */
+    position: relative;
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+}
+
+.marquee-content {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    /* Mulai dari luar layar kanan */
+    animation: marquee-animation 15s linear infinite;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    /* Warna biru khas iOS */
+}
+
+/* Animasi Jalan */
+@keyframes marquee-animation {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.search-icon {
+    font-size: 18px;
+    color: var(--text-sec);
+    margin-right: 8px;
+}
+
+#tool-search {
+    background: transparent;
+    padding: 4px 0;
+    font-size: 16px;
+    border-radius: 0;
+}
+
+/* --- SCROLL REVEAL ANIMATION --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.1, 0, 0.3, 1);
+    visibility: hidden;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+
+
+/* --- iOS Slider Banner --- */
+.ios-slider-container {
+    position: relative;
+    width: 100%;
+    margin: 24px 0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.slider-wrapper {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    /* Geser mulus iOS */
+}
+
+.slide-item {
+    min-width: 100%;
+    cursor: pointer;
+}
+
+.slide-item img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* Pagination Dots */
+.slider-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.dot.active {
+    background: #ffffff;
+    width: 20px;
+    /* Efek memanjang khas iOS saat aktif */
+    border-radius: 4px;
+}
+
+/* --- New Premium iOS Item Card --- */
+.ios-item-card {
+    background: var(--card);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 0.5px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* Efek Klik */
+.ios-item-card:active {
+    transform: scale(0.97);
+    background: var(--input-bg);
+}
+
+.item-header {
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+}
+
+/* Ikon bergaya Squircle iOS */
+.item-icon-wrapper {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--input-bg);
+}
+
+.item-icon-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.item-subtitle {
+    font-size: 13px;
+    color: var(--text-sec);
+    line-height: 1.3;
+}
+
+/* --- Perbaikan & Variasi Badge --- */
+.ios-badge-container {
+    display: flex;
+    gap: 4px; /* Jarak antar badge */
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.ios-badge {
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+}
+
+/* Variasi Warna Badge */
+.ios-badge.blue { background: var(--accent); }
+.ios-badge.green { background: var(--success); }
+.ios-badge.red { background: var(--danger); }
+.ios-badge.orange { background: var(--warning); }
+.ios-badge.gray { background: var(--text-sec); }
+
+.chevron-icon {
+    color: var(--border);
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+
+/* Area Konten Dalam yang Lebih Bersih */
+.item-body {
+    display: none;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 0.5px solid var(--border);
+    animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark Mode Adjustment */
+@media (prefers-color-scheme: dark) {
+    .item-body {
+        background: rgba(255, 255, 255, 0.03);
+    }
+}
+
+/* --- Perbaikan Progress Bar Style --- */
+.ios-progress-wrapper {
+    margin: 16px 0;
+}
+
+.ios-progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600; /* Bold khas Apple */
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.ios-progress-subtitle {
+    font-size: 12px;
+    color: var(--text-sec);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.ios-progress-track {
+    width: 100%;
+    height: 10px;
+    background: var(--input-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+}
+
+/* --- Perbaikan CSS Progress Bar --- */
+.ios-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #5AC8FA);
+    border-radius: 10px;
+    width: 0%; /* Mulai dari 0 untuk ancang-ancang animasi */
+    transition: width 1.5s cubic-bezier(0.1, 0, 0.3, 1);
+}
+
+/* Jika animasi dinonaktifkan */
+.ios-progress-fill.no-anim {
+    transition: none !important;
+}
+
+/* --- Text Formatting iOS --- */
+.ios-h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.ios-h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+}
+
+/* --- Divider --- */
+.ios-divider {
+    height: 0.5px;
+    background-color: var(--border);
+    margin: 15px 0;
+    border: none;
+    width: 100%;
+}
+
+/* --- Tooltips (Note Box) --- */
+.ios-tooltip-box {
+    background: rgba(142, 142, 147, 0.12);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--text-sec);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+/* --- Image in Content --- */
+.ios-content-img {
+    width: 100%;
+    border-radius: 12px;
+    margin: 8px 0;
+    display: block;
+    border: 0.5px solid var(--border);
+}
+
+/* --- Rich Text Elements --- */
+.ios-label {
+    background: var(--accent);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    margin: 0 2px;
+}
+
+/* Kotak / Inline Code */
+.ios-inline-code {
+    background: var(--input-bg);
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: 'SF Mono', monospace;
+    font-size: 13px;
+    border: 0.5px solid var(--border);
+}
+
+/* Checkbox Icons */
+.ios-checkbox {
+    font-size: 18px;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.ios-checkbox.checked {
+    color: var(--success);
+}
+
+.ios-checkbox.empty {
+    color: var(--text-sec);
+}
+
+/* Alignment Helpers */
+.text-left {
+    text-align: left;
+    width: 100%;
+    display: block;
+}
+
+.text-center {
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+.text-right {
+    text-align: right;
+    width: 100%;
+    display: block;
+}
+
+/* List Item */
+.ios-list-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 4px;
+    gap: 8px;
+}
+
+/* Pastikan container utama mendukung baris baru */
+.pre-line {
+    white-space: pre-wrap;
+    /* Mendukung \n dan pembungkusan teks otomatis */
+    word-break: break-word;
+}
+
+/* Style untuk setiap baris yang dihasilkan parser */
+.ios-line {
+    display: block;
+    min-height: 1.2em;
+    /* Agar baris kosong tetap memiliki tinggi */
+    margin-bottom: 2px;
+}
+
+/* Header harus tetap bersifat blok */
+.ios-h1,
+.ios-h2 {
+    display: block;
+    width: 100%;
+}
+
+/* --- iOS Popup / Modal Style --- */
+.ios-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 20px;
+}
+
+.ios-popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.ios-popup-card {
+    background: var(--card);
+    width: 100%;
+    max-width: 320px;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.1, 0, 0.3, 1.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.ios-popup-overlay.active .ios-popup-card {
+    transform: scale(1);
+}
+
+.popup-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+
+.popup-text {
+    font-size: 14px;
+    color: var(--text-sec);
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.popup-btns-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Tombol Close khusus di dalam popup */
+.btn-close-popup {
+    margin-top: 10px;
+    background: transparent;
+    color: var(--danger);
+    font-weight: 700;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anvil Rename Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+    <nav class="ios-top-bar">
+        <a href="../../index.html" class="ios-back-btn">
+            <ion-icon name="chevron-back-outline"></ion-icon>
+            Back
+        </a>
+        <div class="ios-nav-title">Anvil Generator</div>
+    </nav>
+
+    <div class="container">
+        <header class="reveal active">
+            <h1 class="ios-large-title">Anvil Rename</h1>
+            <p class="ios-subtitle">Dibuat oleh VelixsCraftMCYT</p>
+        </header>
+
+        <!-- BANNER SLIDER (Dikonfigurasi via JS) -->
+        <div id="banner-section" class="ios-slider-container reveal active">
+            <div class="slider-wrapper" id="slider-wrapper">
+                <!-- Slides generated here -->
+            </div>
+            <div class="slider-dots" id="slider-dots">
+                <!-- Dots generated here -->
+            </div>
+        </div>
+
+        <!-- Box Catatan -->
+        <div class="info-box reveal active">
+            <div class="info-title">
+                <ion-icon name="bookmark-outline"></ion-icon> Catatan Penggunaan
+            </div>
+            <div class="info-content">
+                <ul>
+                    <li>Input otomatis: <b>kecil</b> & spasi jadi <b>_</b>.</li>
+                    <li>Gunakan <b>Import</b> untuk memuat file <code>AnvilRename.js</code>.</li>
+                    <li>Entry terbaru selalu muncul di paling atas daftar.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('generator')">Generator</button>
+            <button class="tab" onclick="switchTab('code')">Code Preview</button>
+        </div>
+
+        <!-- Section: Generator -->
+        <div id="section-generator">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <span class="ios-block-label">Tambah Entry</span>
+                    <button class="btn btn-warning" style="margin:0; font-size: 11px;" onclick="triggerImport()">
+                        <ion-icon name="document-attach-outline"></ion-icon> Import .js
+                    </button>
+                    <input type="file" id="file-import" style="display: none;" accept=".js" onchange="handleImport(event)">
+                </div>
+                
+                <div class="form-grid">
+                    <div>
+                        <label>Nama Display (Key)</label>
+                        <input type="text" id="input-key" placeholder="pedang_api" oninput="sanitizeInput(this)">
+                    </div>
+                    <div>
+                        <label>Item Hasil (Result)</label>
+                        <input type="text" id="input-result" placeholder="minecraft:diamond_sword" oninput="sanitizeInput(this)">
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label>Bahan-Bahan Item</label>
+                    <div id="materials-list">
+                        <div class="flex-row">
+                            <input type="text" class="material-input" placeholder="minecraft:iron_sword" oninput="sanitizeInput(this)">
+                        </div>
+                    </div>
+                    <button class="btn btn-warning" onclick="addMaterialField('materials-list')">
+                        <ion-icon name="add-outline"></ion-icon> Tambah Bahan
+                    </button>
+                </div>
+
+                <button class="btn btn-add" style="margin-top: 24px;" onclick="addNewEntry()">
+                    <ion-icon name="save-outline"></ion-icon> Simpan Ke Daftar
+                </button>
+            </div>
+
+            <div id="items-list"></div>
+
+            <button class="btn btn-add" style="background: var(--success); margin-top: 20px;" onclick="downloadAddon()">
+                <ion-icon name="download-outline"></ion-icon> Download .mcaddon.zip
+            </button>
+        </div>
+
+        <!-- Section: Code -->
+        <div id="section-code" style="display: none;">
+            <div class="card code-card">
+                <button class="btn-copy" onclick="copyCode()">Salin Kode</button>
+                <pre id="code-output"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="ios-bottom-bar">
+        <a href="javascript:void(0)" class="ios-tab active" id="tab-gen-btn" onclick="switchTab('generator')">
+            <ion-icon name="hammer-outline"></ion-icon><span>Generator</span>
+        </a>
+        <a href="javascript:void(0)" class="ios-tab" id="tab-code-btn" onclick="switchTab('code')">
+            <ion-icon name="code-working-outline"></ion-icon><span>Code</span>
+        </a>
+    </nav>
+
+    <!-- POPUP EDIT -->
+    <div class="ios-popup-overlay" id="edit-popup">
+        <div class="ios-popup-card" style="max-width: 90%; text-align: left;">
+            <div class="popup-title">Edit Entry</div>
+            <input type="hidden" id="edit-old-key">
+            <label>Nama Display</label>
+            <input type="text" id="edit-key" oninput="sanitizeInput(this)" style="margin-bottom: 10px;">
+            <label>Item Hasil</label>
+            <input type="text" id="edit-result" oninput="sanitizeInput(this)" style="margin-bottom: 10px;">
+            <label>Bahan-Bahan</label>
+            <div id="edit-materials-list"></div>
+            <button class="btn btn-warning" onclick="addMaterialField('edit-materials-list')" style="margin-top: 5px;">+ Bahan</button>
+            <div class="popup-btns-vertical" style="margin-top: 20px;">
+                <button class="btn btn-add" onclick="saveEdit()">Simpan Perubahan</button>
+                <button class="btn-close-popup" onclick="closeEditPopup()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ios-popup-overlay" id="popup">
+        <div class="ios-popup-card">
+            <div class="popup-title" id="popup-title">Info</div>
+            <div class="popup-text" id="popup-msg"></div>
+            <button class="btn btn-add" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
