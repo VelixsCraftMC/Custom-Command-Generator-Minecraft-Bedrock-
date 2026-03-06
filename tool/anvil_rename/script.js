@@ -1,4 +1,3 @@
-// --- KONFIGURASI BANNER ---
 const bannerConfig = [
     {
         image: "im/1.webp",
@@ -26,8 +25,6 @@ const assetConfig = [
     }
 ];
 
-
-
 let Items_rename = {};
 let currentSlide = 0;
 
@@ -40,27 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
 function initBanner() {
     const wrapper = document.getElementById('slider-wrapper');
     const dotsContainer = document.getElementById('slider-dots');
-    
-    if (bannerConfig.length === 0) {
-        document.getElementById('banner-section').style.display = 'none';
-        return;
-    }
+    if (bannerConfig.length === 0) return;
 
     bannerConfig.forEach((banner, index) => {
-        // Create Slide
         const slide = document.createElement('div');
         slide.className = 'slide-item';
-        slide.innerHTML = `<a href="${banner.link}" target="_blank"><img src="${banner.image}" alt="${banner.alt}"></a>`;
+        slide.innerHTML = `<a href="${banner.link}" target="_blank"><img src="${banner.image}"></a>`;
         wrapper.appendChild(slide);
 
-        // Create Dot
         const dot = document.createElement('div');
         dot.className = `dot ${index === 0 ? 'active' : ''}`;
         dot.onclick = () => goToSlide(index);
         dotsContainer.appendChild(dot);
     });
 
-    // Auto Slide tiap 5 detik
     setInterval(() => {
         currentSlide = (currentSlide + 1) % bannerConfig.length;
         goToSlide(currentSlide);
@@ -69,19 +59,13 @@ function initBanner() {
 
 function goToSlide(index) {
     currentSlide = index;
-    const wrapper = document.getElementById('slider-wrapper');
-    const dots = document.querySelectorAll('.dot');
-    
-    wrapper.style.transform = `translateX(-${index * 100}%)`;
-    dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === index);
-    });
+    document.getElementById('slider-wrapper').style.transform = `translateX(-${index * 100}%)`;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === index));
 }
 
-// --- LOGIKA OTOMATIS: HURUF KECIL & SPASI JADI _ ---
-function sanitizeInput(el) {
+function sanitizeItemID(el) {
     let val = el.value.toLowerCase().replace(/\s+/g, '_');
-    val = val.replace(/[^a-z0-9_:]/g, ''); // Hanya izinkan karakter Minecraft valid
+    val = val.replace(/[^a-z0-9_:]/g, ''); 
     el.value = val;
 }
 
@@ -92,7 +76,7 @@ function addMaterialField(containerId, value = "") {
     div.className = 'flex-row';
     div.style.marginTop = '8px';
     div.innerHTML = `
-        <input type="text" class="material-input" value="${value}" oninput="sanitizeInput(this)">
+        <input type="text" class="material-input" value="${value}" oninput="sanitizeItemID(this)" placeholder="minecraft:item_id">
         <button class="btn btn-danger-small btn-danger" onclick="this.parentElement.remove()">
             <ion-icon name="close-outline"></ion-icon>
         </button>
@@ -104,7 +88,7 @@ function renderItems() {
     const list = document.getElementById('items-list');
     list.innerHTML = '';
     
-    // Sort Entry Terbesar ke Terkecil (Terbaru di atas)
+    // Sort Entry Terbaru di Atas
     const sorted = Object.entries(Items_rename).sort((a, b) => b[1].entry - a[1].entry);
 
     sorted.forEach(([key, val]) => {
@@ -117,7 +101,7 @@ function renderItems() {
                 </div>
                 <div class="item-info">
                     <div class="item-title">${key} <span class="ios-badge blue">#${val.entry}</span></div>
-                    <div class="item-subtitle">Hasil: ${val.result}</div>
+                    <div class="item-subtitle">Result: ${val.result}</div>
                     <div class="ios-badge-container" style="margin-top:5px;">
                         ${val.items.map(i => `<span class="ios-badge gray">${i}</span>`).join('')}
                     </div>
@@ -138,7 +122,8 @@ function renderItems() {
 }
 
 function addNewEntry() {
-    const key = document.getElementById('input-key').value;
+    // Nama Display (Key) - Tidak di-sanitize agar bisa Besar & Spasi
+    const key = document.getElementById('input-key').value.trim();
     const res = document.getElementById('input-result').value;
     const mats = Array.from(document.querySelectorAll('#materials-list .material-input'))
                       .map(i => i.value).filter(v => v !== "");
@@ -150,18 +135,19 @@ function addNewEntry() {
     
     Items_rename[key] = { entry: nextId, items: mats, result: res };
     
+    // Reset Form
     document.getElementById('input-key').value = '';
     document.getElementById('input-result').value = '';
-    document.getElementById('materials-list').innerHTML = `<div class="flex-row"><input type="text" class="material-input" oninput="sanitizeInput(this)"></div>`;
+    document.getElementById('materials-list').innerHTML = `<div class="flex-row"><input type="text" class="material-input" oninput="sanitizeItemID(this)"></div>`;
     
     renderItems();
 }
 
-// --- EDIT & IMPORT ---
+// --- POPUP EDIT & IMPORT ---
 function openEditPopup(key) {
     const data = Items_rename[key];
     document.getElementById('edit-old-key').value = key;
-    document.getElementById('edit-key').value = key;
+    document.getElementById('edit-key').value = key; // Bisa Besar/Spasi
     document.getElementById('edit-result').value = data.result;
     const matList = document.getElementById('edit-materials-list');
     matList.innerHTML = '';
@@ -171,8 +157,9 @@ function openEditPopup(key) {
 
 function saveEdit() {
     const oldKey = document.getElementById('edit-old-key').value;
-    const newKey = document.getElementById('edit-key').value;
+    const newKey = document.getElementById('edit-key').value.trim(); // Simpan key baru
     const entryId = Items_rename[oldKey].entry;
+    
     delete Items_rename[oldKey];
     Items_rename[newKey] = {
         entry: entryId,
@@ -204,7 +191,7 @@ function handleImport(event) {
     reader.readAsText(file);
 }
 
-// --- SYSTEM ---
+// --- SISTEM DOWNLOAD & UI ---
 function updateCodePreview() {
     document.getElementById('code-output').textContent = `export const Items_rename = ${JSON.stringify(Items_rename, null, 4)};`;
 }
@@ -222,53 +209,37 @@ function switchTab(t) {
     }
 }
 
+async function downloadAddon() {
+    const zip = new JSZip();
+    const bp = zip.folder("BP");
+
+    showPopup("Processing", "Sedang mengemas file...");
+
+    // File Statis Berdasarkan Jalur
+    for (const a of assetConfig) {
+        try {
+            const r = await fetch(a.path);
+            if(r.ok) bp.file(a.path_zip, await r.blob());
+        } catch(e) { console.error("Gagal memuat: " + a.path); }
+    }
+
+    // File Hasil Generator
+    bp.file("scripts/AnvilRename.js", document.getElementById('code-output').textContent);
+
+    zip.generateAsync({type:"blob"}).then(c => {
+        const l = document.createElement('a');
+        l.href = URL.createObjectURL(c);
+        l.download = "Anvil Rename Addon - Bedrock.mcaddon.zip";
+        l.click();
+        showPopup("Berhasil", "Addon siap!");
+    });
+}
+
 function deleteEntry(key) { if(confirm(`Hapus ${key}?`)) { delete Items_rename[key]; renderItems(); } }
 
 function copyCode() {
     navigator.clipboard.writeText(document.getElementById('code-output').textContent);
     showPopup("Berhasil", "Kode disalin!");
-}
-
-// --- FUNGSI DOWNLOAD MCADDON ZIP ---
-async function downloadAddon() {
-    const zip = new JSZip();
-    
-    // 1. Membuat Folder Utama BP
-    const bp = zip.folder("Anvil Rename BP");
-
-    showPopup("Processing", "Sedang mengumpulkan file...", "warning");
-
-    // 2. Memproses File Statis berdasarkan Konfigurasi
-    // Loop ini akan otomatis membuat folder jika path_zip mengandung '/'
-    for (const asset of assetConfig) {
-        try {
-            const response = await fetch(asset.path);
-            if (response.ok) {
-                const blob = await response.blob();
-                // JSZip otomatis membuat folder berdasarkan string path_zip
-                bp.file(asset.path_zip, blob);
-            } else {
-                console.error("Gagal mengambil file: " + asset.path);
-            }
-        } catch (e) {
-            console.error("Error pada file: " + asset.path, e);
-        }
-    }
-
-    // 3. Memasukkan file AnvilRename.js (Hasil Generator)
-    // Sesuai permintaan, diletakkan di BP/scripts/AnvilRename.js
-    const generatedCode = document.getElementById('code-output').textContent;
-    bp.file("scripts/AnvilRename.js", generatedCode);
-
-    // 4. Proses Menjadi File .mcaddon.zip dan Download
-    zip.generateAsync({ type: "blob" }).then(function (content) {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(content);
-        link.download = "anvil_rename_addon.mcaddon.zip";
-        link.click();
-        
-        showPopup("Berhasil", "Addon berhasil diunduh!", "success");
-    });
 }
 
 function showPopup(t, m) {

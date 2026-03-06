@@ -42,9 +42,9 @@
             </div>
             <div class="info-content">
                 <ul>
-                    <li>Input otomatis: <b>kecil</b> & spasi jadi <b>_</b>.</li>
+                    <li>Nama Display bisa menggunakan <b>Huruf Besar & Spasi</b>.</li>
+                    <li>Item ID (Result/Bahan) otomatis: <b>kecil</b> & spasi jadi <b>_</b>.</li>
                     <li>Gunakan <b>Import</b> untuk memuat file <code>AnvilRename.js</code>.</li>
-                    <li>Entry terbaru selalu muncul di paling atas daftar.</li>
                 </ul>
             </div>
         </div>
@@ -68,11 +68,13 @@
                 <div class="form-grid">
                     <div>
                         <label>Nama Display (Key)</label>
-                        <input type="text" id="input-key" placeholder="pedang_api" oninput="sanitizeInput(this)">
+                        <!-- Diganti agar bisa Besar & Spasi -->
+                        <input type="text" id="input-key" placeholder="Diamond Slayer">
                     </div>
                     <div>
                         <label>Item Hasil (Result)</label>
-                        <input type="text" id="input-result" placeholder="minecraft:diamond_sword" oninput="sanitizeInput(this)">
+                        <!-- Tetap otomatis kecil & underscore -->
+                        <input type="text" id="input-result" placeholder="minecraft:diamond_sword" oninput="sanitizeItemID(this)">
                     </div>
                 </div>
 
@@ -80,7 +82,8 @@
                     <label>Bahan-Bahan Item</label>
                     <div id="materials-list">
                         <div class="flex-row">
-                            <input type="text" class="material-input" placeholder="minecraft:iron_sword" oninput="sanitizeInput(this)">
+                            <!-- Bahan otomatis kecil & underscore -->
+                            <input type="text" class="material-input" placeholder="minecraft:iron_sword" oninput="sanitizeItemID(this)">
                         </div>
                     </div>
                     <button class="btn btn-warning" onclick="addMaterialField('materials-list')">
@@ -124,13 +127,19 @@
         <div class="ios-popup-card" style="max-width: 90%; text-align: left;">
             <div class="popup-title">Edit Entry</div>
             <input type="hidden" id="edit-old-key">
+            
             <label>Nama Display</label>
-            <input type="text" id="edit-key" oninput="sanitizeInput(this)" style="margin-bottom: 10px;">
+            <!-- Diganti agar bisa Besar & Spasi -->
+            <input type="text" id="edit-key" placeholder="Diamond Slayer" style="margin-bottom: 10px;">
+            
             <label>Item Hasil</label>
-            <input type="text" id="edit-result" oninput="sanitizeInput(this)" style="margin-bottom: 10px;">
+            <!-- Tetap otomatis kecil & underscore -->
+            <input type="text" id="edit-result" placeholder="minecraft:diamond_sword" oninput="sanitizeItemID(this)" style="margin-bottom: 10px;">
+            
             <label>Bahan-Bahan</label>
             <div id="edit-materials-list"></div>
             <button class="btn btn-warning" onclick="addMaterialField('edit-materials-list')" style="margin-top: 5px;">+ Bahan</button>
+            
             <div class="popup-btns-vertical" style="margin-top: 20px;">
                 <button class="btn btn-add" onclick="saveEdit()">Simpan Perubahan</button>
                 <button class="btn-close-popup" onclick="closeEditPopup()">Batal</button>
