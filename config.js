@@ -53,6 +53,20 @@ const config = {
             ]
         },
         {
+            ikon: "tool/anvil_rename/pack.webp",
+            nama: "Addons Anvil Rename (Generator)",
+            teks: "» Anvil Rename untuk miencraft bedrock edition",
+            konten_dalam: [{
+                judul: "( Pastikan Kamu paham akan hal ini)",
+                teks: "» 26.0+",
+                button: [{
+                    text: "Anvil Rename Generator",
+                    link: "tool/anvil_rename/index.html",
+                    primary: true
+                }]
+            }]
+        },
+        {
             ikon: "tool/command/pack.webp",
             nama: "Custom Command (Generator)",
             teks: "» Membuat Custom Command sendiri\n» seperti halnya Vanilla command\n» Mendukung terus untuk versi terbaru 1.21.130+ Minecraft, tidak bisa versi ke bawah 1.21.120-",
